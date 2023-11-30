@@ -12,13 +12,16 @@ import string
 import os
 import sys
 
+
 class DataPreprocessing:
-    def __init__(self,filepath):
+    def __init__(self,filepath,product_name):
         self.__filename=filepath
+        self.__product_name=product_name
         
 
     def preprocessing(self):
         try:
+            
            
             dataset = pd.read_csv(self.__filename)
             stemmer = nltk.SnowballStemmer("english")
@@ -41,8 +44,11 @@ class DataPreprocessing:
 
             dataset["Reviews"] = dataset["Reviews"].apply(clean)
             os.makedirs('static',exist_ok=True)
-            file_path = os.path.join('static',"processed_1.csv")
+            file_path = os.path.join('static',"{}_processed_1.csv".format(self.__product_name))
             dataset.to_csv(file_path,index=False)
+
+
+
 
         except Exception as e:
             raise CustomException(e,sys)
@@ -50,9 +56,9 @@ class DataPreprocessing:
 
 
 
-if __name__=="__main__":
-    obj=DataPreprocessing('static\iphone5g.csv')
-    obj.preprocessing()
+# if __name__=="__main__":
+#     obj=DataPreprocessing('static\iphone5g.csv')
+#     obj.preprocessing()
 
 
 

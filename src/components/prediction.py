@@ -9,8 +9,9 @@ import os
 import sys
 
 class SentimentPredictions:
-    def __init__(self,filename):
+    def __init__(self,filename,product_name):
        self.__filename=filename
+       self.__product_name=product_name
 
     def predictions(self):
         try:
@@ -44,7 +45,7 @@ class SentimentPredictions:
             dataset['New sentiments'] = sentiment_df['NewSentiment']
             dataset = dataset[["Reviews", "Positive", "Negative","Neutral",'New sentiments']]
             os.makedirs('static',exist_ok=True)
-            file_path = os.path.join('static',"PredictSentiment.csv")
+            file_path = os.path.join('static',"{}Sentiment.csv".format(self.__product_name))
             dataset.to_csv(file_path,index=False)
 
             x = sum(dataset["Positive"])
@@ -58,15 +59,30 @@ class SentimentPredictions:
                 else:
                     print("Neutral 🙂 ")
             sentiment_score(x, y, z)
+            # X = dataset[[dataset['New sentiments']=="positive" ]].shape[0]
+            # Y = dataset[[dataset['New sentiments']=="neutral" ]].shape[0]
+            # Z = dataset[[dataset['New sentiments']=="negative" ]].shape[0]
+            
+            X = dataset[dataset['New sentiments']=="positive" ].shape[0]
+            Y = dataset[dataset['New sentiments']=="neutral" ].shape[0]
+            Z = dataset[dataset['New sentiments']=="negative" ].shape[0]
+            total = X+Y+Z
+            per_X = round(X/total,2)
+            per_Y = round(Y/total,2)
+            per_Z =round(Z/total,2)
+               
+               
             print("Positive score:",x)
             print("Negative score:",y)
             print("Neutral score:",z)
-
+            return (per_X*100,per_Y*100,per_Z*100)
 
         except Exception as e:
             raise CustomException(e,sys)
 
 
-if __name__=="__main__":
-   obj=SentimentPredictions('static\processed_1.csv')
-   obj.predictions()
+# if __name__=="__main__":
+#    obj=SentimentPredictions('static\processed_1.csv')
+#    obj.predictions()
+   
+   

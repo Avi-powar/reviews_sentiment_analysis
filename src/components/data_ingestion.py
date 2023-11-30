@@ -7,6 +7,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 import concurrent.futures
 
+
 class DataIngestion:
     def __init__(self,flipkart_product_name):
         self.__name=flipkart_product_name
@@ -38,7 +39,7 @@ class DataIngestion:
 
                 pn = 1
 
-                while pn <= 10:
+                while pn <= 5:
                     get_finalUrl = product_url + str(pn)
                     product_req = requests.get(get_finalUrl, headers=headers)
 
@@ -106,11 +107,15 @@ class DataIngestion:
             df.to_csv(file_path,index=False)
 
             
+
+
+
+            
         except Exception as e:
             raise CustomException(e,sys)
         
 
 
-if __name__=="__main__":
-    obj=DataIngestion("iphone 5g")
-    obj.initiate_data_ingestion()        
+# if __name__=="__main__":
+#     obj=DataIngestion("iphone 5g")
+#     obj.initiate_data_ingestion()        
